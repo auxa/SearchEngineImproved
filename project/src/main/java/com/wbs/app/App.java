@@ -41,9 +41,12 @@ public class App
     	FrParser myParser = new FrParser();
     	ArrayList<Document> myDocs = myParser.parseFile();
     	for(int i=0; i< myDocs.size(); i++){
+            
     		System.out.println(myDocs.get(i).get("id"));
     		System.out.println(myDocs.get(i).get("filename"));
+            System.out.println("????????????????????????");
     		System.out.println(myDocs.get(i).get("date"));
+            System.out.println("????????????????????????");
     		System.out.println(myDocs.get(i).get("text"));
     		System.out.println("///////////////////////////////////////////////////////////////////////////");
 
