@@ -34,14 +34,12 @@ import org.jsoup.select.Elements;
  * Hello world!
  *
  */
-public class App 
-{
-    public static void main( String[] args )
-    {
-    	FrParser myParser = new FrParser();
+public class App {
+  public static void main(String[] args) throws IOException {
+    	LAParser myParser = new LAParser();
     	ArrayList<Document> myDocs = myParser.parseFile();
-    	for(int i=0; i< myDocs.size(); i++){
-            
+    	for(int i=0; i<1; i++){
+
     		System.out.println(myDocs.get(i).get("id"));
     		System.out.println(myDocs.get(i).get("filename"));
             System.out.println("????????????????????????");
