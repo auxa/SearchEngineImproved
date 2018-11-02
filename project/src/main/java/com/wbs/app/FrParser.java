@@ -35,6 +35,13 @@ public class FrParser {
 	
 	public FrParser() {}
 	
+	// Parses fr94 file doc's
+	// Return Arraylist of lucene Documents
+	// Document fields:
+	// 		- id: unique id of document, TextField, String
+	// 		- filename: <TITLE> tag of document, TextField, String ** Not present in all docs
+	// 		- text: cleaned body of document text, TextField, String
+	// 		- date: <DATE> tag contents, TextField, String ** Not present in all docs
 
 	public ArrayList<Document> parseFile(){
 		String docDir="/Users/markmurtagh/SearchEngineImproved/project/AssignmentTwo/fr94";
@@ -43,39 +50,43 @@ public class FrParser {
   		File[] directoryListing = dir.listFiles();
   		if (directoryListing != null) {
     		for (File child : directoryListing) {
-    			File [] subDir = child.listFiles();
-    			for(File sDir : subDir){
-    				File input = sDir;
-					try {
-						org.jsoup.nodes.Document doc = Jsoup.parse(input, "UTF-8");
-						Elements documents = doc.getElementsByTag("DOC");
-						for (Element docI: documents){
-							String docNum=docI.getElementsByTag("DOCNO").text();
-							Elements text= docI.getElementsByTag("TEXT");
-							Elements date = docI.getElementsByTag("DATE");
-							Elements title= docI.getElementsByTag("DOCTITLE");
-							String textField=getBasicText(text.text());
-							String titleText= title.text();
-							Document customDoc = new Document();
-							customDoc.add(new TextField("id", docNum, Field.Store.YES));
-							customDoc.add(new TextField("filename", title.text(), Field.Store.YES));
-							customDoc.add(new TextField("text", textField, Field.Store.YES));
-							customDoc.add(new TextField("date", date.text(), Field.Store.YES));
-							docList.add(customDoc);		
+    			File subDocDir = new File(child.getAbsolutePath());
+    			File[] subDirectoryListing = subDocDir.listFiles();
+    			if (subDirectoryListing != null) {
+    				for(File child2 : subDirectoryListing ){
+	    				File input = child2;
+	    				try {
+	    					org.jsoup.nodes.Document doc = Jsoup.parse(input, "UTF-8");
+							Elements documents = doc.getElementsByTag("DOC");
+							for (Element docI: documents){
+								String docNum=docI.getElementsByTag("DOCNO").text();
+								Elements text= docI.getElementsByTag("TEXT");
+								Elements date = docI.getElementsByTag("DATE");
+								Elements title= docI.getElementsByTag("DOCTITLE");
+								String textField=getBasicText(text.text());
+								String titleText= title.text();
+								Document customDoc = new Document();
+								customDoc.add(new TextField("id", docNum, Field.Store.YES));
+								customDoc.add(new TextField("filename", title.text(), Field.Store.YES));
+								customDoc.add(new TextField("text", textField, Field.Store.YES));
+								customDoc.add(new TextField("date", date.text(), Field.Store.YES));
+								docList.add(customDoc);				
 
-						}
-					} catch (IOException e) {
-						e.printStackTrace();	
-
-					}	
-				}
-      		}
-  		} else {
+							}
+						} catch (IOException e) {
+							e.printStackTrace();	
+						}	
+	    			}
+    			}
+    		}
+      	}
+  		else {
 
   		}
 		return docList;
 	}
-
+	
+	// Function which takes in all text between <TEXT> tags and return cleaned version with no tags or comments
 	public String getBasicText(String text){
 		String [] lines = text.split("\r\n");
 		String cleanedText="";
