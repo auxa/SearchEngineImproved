@@ -36,7 +36,7 @@ import org.jsoup.select.Elements;
  */
 public class App {
   public static void main(String[] args) throws IOException {
-    	LAParser myParser = new LAParser();
+    	FTParser myParser = new FTParser();
     	ArrayList<Document> myDocs = myParser.parseFile();
     	for(int i=0; i<1; i++){
 
