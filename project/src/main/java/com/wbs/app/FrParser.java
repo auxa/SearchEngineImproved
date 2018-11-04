@@ -32,9 +32,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class FrParser {
-	
+
 	public FrParser() {}
-	
+
 	// Parses fr94 file doc's
 	// Return Arraylist of lucene Documents
 	// Document fields:
@@ -44,7 +44,7 @@ public class FrParser {
 	// 		- date: <DATE> tag contents, TextField, String ** Not present in all docs
 
 	public ArrayList<Document> parseFile(){
-		String docDir="/Users/markmurtagh/SearchEngineImproved/project/AssignmentTwo/fr94";
+		String docDir="../project/AssignmentTwo/fr94";
 		ArrayList<Document> docList = new ArrayList<Document>();
 		File dir = new File(docDir);
   		File[] directoryListing = dir.listFiles();
@@ -70,12 +70,13 @@ public class FrParser {
 								customDoc.add(new TextField("filename", title.text(), Field.Store.YES));
 								customDoc.add(new TextField("text", textField, Field.Store.YES));
 								customDoc.add(new TextField("date", date.text(), Field.Store.YES));
-								docList.add(customDoc);				
+								docList.add(customDoc);
+								System.out.println("added doc number FT:  "+ docNum);
 
 							}
 						} catch (IOException e) {
-							e.printStackTrace();	
-						}	
+							e.printStackTrace();
+						}
 	    			}
     			}
     		}
@@ -85,23 +86,23 @@ public class FrParser {
   		}
 		return docList;
 	}
-	
+
 	// Function which takes in all text between <TEXT> tags and return cleaned version with no tags or comments
 	public String getBasicText(String text){
 		String [] lines = text.split("\r\n");
 		String cleanedText="";
 		for(int i=0; i<lines.length; i++){
-			if(!(lines[i].contains("<!--") || lines[i].contains("<AGENCY>") || lines[i].contains("<DATE>") || lines[i].contains("<DOCTITLE>") || 
-				lines[i].contains("<ACTION>") || lines[i].contains("<SUMMARY>") || lines[i].contains("<FOOTNAME>") || lines[i].contains("<FURTHER>") || 
-				lines[i].contains("<SIGNER>") || lines[i].contains("<SIGNJOB>") || lines[i].contains("<FRFILING>") || lines[i].contains("<BILLING>") || 
-				lines[i].contains("<FOOTNOTE>") || lines[i].contains("<FOOTCITE>") || lines[i].contains("<TABLE>") || lines[i].contains("<ADDRESS>") || 
-				lines[i].contains("<IMPORT>") || lines[i].contains("<SUPPLEM>") || lines[i].contains("<USDEPT>") || lines[i].contains("<USBUREAU>") || 
-				lines[i].contains("<CFRNO>") || lines[i].contains("<RINDOCK>") || lines[i].contains("<FRFILING>") || lines[i].contains("<BILLING>") || 
-				lines[i].contains("</AGENCY>") || lines[i].contains("</DATE>") || lines[i].contains("</DOCTITLE>") || 
-				lines[i].contains("</ACTION>") || lines[i].contains("</SUMMARY>") || lines[i].contains("</FOOTNAME>") || lines[i].contains("</FURTHER>") || 
-				lines[i].contains("</SIGNER>") || lines[i].contains("</SIGNJOB>") || lines[i].contains("</FRFILING>") || lines[i].contains("</BILLING>") || 
-				lines[i].contains("</FOOTNOTE>") || lines[i].contains("</FOOTCITE>") || lines[i].contains("</TABLE>") || lines[i].contains("</ADDRESS>") || 
-				lines[i].contains("</IMPORT>") || lines[i].contains("</SUPPLEM>") || lines[i].contains("</USDEPT>") || lines[i].contains("</USBUREAU>") || 
+			if(!(lines[i].contains("<!--") || lines[i].contains("<AGENCY>") || lines[i].contains("<DATE>") || lines[i].contains("<DOCTITLE>") ||
+				lines[i].contains("<ACTION>") || lines[i].contains("<SUMMARY>") || lines[i].contains("<FOOTNAME>") || lines[i].contains("<FURTHER>") ||
+				lines[i].contains("<SIGNER>") || lines[i].contains("<SIGNJOB>") || lines[i].contains("<FRFILING>") || lines[i].contains("<BILLING>") ||
+				lines[i].contains("<FOOTNOTE>") || lines[i].contains("<FOOTCITE>") || lines[i].contains("<TABLE>") || lines[i].contains("<ADDRESS>") ||
+				lines[i].contains("<IMPORT>") || lines[i].contains("<SUPPLEM>") || lines[i].contains("<USDEPT>") || lines[i].contains("<USBUREAU>") ||
+				lines[i].contains("<CFRNO>") || lines[i].contains("<RINDOCK>") || lines[i].contains("<FRFILING>") || lines[i].contains("<BILLING>") ||
+				lines[i].contains("</AGENCY>") || lines[i].contains("</DATE>") || lines[i].contains("</DOCTITLE>") ||
+				lines[i].contains("</ACTION>") || lines[i].contains("</SUMMARY>") || lines[i].contains("</FOOTNAME>") || lines[i].contains("</FURTHER>") ||
+				lines[i].contains("</SIGNER>") || lines[i].contains("</SIGNJOB>") || lines[i].contains("</FRFILING>") || lines[i].contains("</BILLING>") ||
+				lines[i].contains("</FOOTNOTE>") || lines[i].contains("</FOOTCITE>") || lines[i].contains("</TABLE>") || lines[i].contains("</ADDRESS>") ||
+				lines[i].contains("</IMPORT>") || lines[i].contains("</SUPPLEM>") || lines[i].contains("</USDEPT>") || lines[i].contains("</USBUREAU>") ||
 				lines[i].contains("</CFRNO>") || lines[i].contains("</RINDOCK>") || lines[i].contains("</FRFILING>") || lines[i].contains("</BILLING>" )))
 				{
 					cleanedText+=(lines[i] + "\r\n");
@@ -110,20 +111,3 @@ public class FrParser {
 			return cleanedText;
 		}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

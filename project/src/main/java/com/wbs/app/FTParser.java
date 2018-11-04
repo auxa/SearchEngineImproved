@@ -13,11 +13,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class FTParser {
-	
-	public String FT_FOLDER = "Assignment Two/ft";
-	
+
+	public String FT_FOLDER = "../project/AssignmentTwo/ft";
+
 	public FTParser() {}
-	
+
 	public ArrayList<Document> parseFile(){
 		ArrayList<Document> docList = new ArrayList<Document>();
 		File dir = new File(FT_FOLDER);
@@ -37,10 +37,6 @@ public class FTParser {
 						for (Element docI: documents){
 							String docNum= docI.getElementsByTag("DOCNO").text();
 							Elements text= docI.getElementsByTag("TEXT");
-							if(text.toString().contains("<"))
-							{
-								System.out.print(docNum + " contains tag");
-							}
 							Elements dateElement = docI.getElementsByTag("DATE");
 							String title= docI.getElementsByTag("HEADLINE").text();
 							String textField= text.text();
@@ -49,12 +45,13 @@ public class FTParser {
 							customDoc.add(new TextField("filename", title, Field.Store.YES));
 							customDoc.add(new TextField("text", textField, Field.Store.YES));
 							customDoc.add(new TextField("date", dateElement.text(), Field.Store.YES));
-							docList.add(customDoc);				
+							docList.add(customDoc);
+							System.out.println("added doc number FT:  "+ docNum);
 
 						}
 					} catch (IOException e) {
-						e.printStackTrace();	
-					}	
+						e.printStackTrace();
+					}
     			}
 			}
 		}
