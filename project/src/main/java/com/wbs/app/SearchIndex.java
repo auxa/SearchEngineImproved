@@ -34,6 +34,7 @@ import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.search.similarities.*;
 
 public class SearchIndex {
+          private static Analyzer analyzer;
           private static String INDEX_DIRECTORY = "../index";
 
           private static int MAX_RESULTS = 30; //subject to change
@@ -50,7 +51,7 @@ public class SearchIndex {
 
             CharArraySet stopWords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 
-            Analyzer analyzer = new CustomAnalyzer(stopWords);
+            analyzer = new CustomAnalyzer(stopWords);
 
             MultiFieldQueryParser qp = new MultiFieldQueryParser(new String[] {"filename", "text"}, analyzer, boost);
 
@@ -59,19 +60,10 @@ public class SearchIndex {
             ArrayList<String> vars = new ArrayList<String>();
             for (int j=0; loadedQueries.size()>j; j++){
               Document qd = loadedQueries.get(j);
-              String q = qd.get("desc");
-              q = q.trim();
-              if (q.length() >0){
-                Query query = null;
-                String stringify = QueryParser.escape(q);
+              BooleanQuery qf = getQuery(qd);
 
-                try{
-                  query = qp.parse(stringify);
-                } catch (ParseException e){
-                  System.out.println("Failed to parse: "+ e);
-                }
-                ScoreDoc[] hits = isearcher.search(query, MAX_RESULTS).scoreDocs;
-                for (int i = 0; i < hits.length; i++) {
+              ScoreDoc[] hits = isearcher.search(qf, MAX_RESULTS).scoreDocs;
+              for (int i = 0; i < hits.length; i++) {
                   Document hitDoc = isearcher.doc(hits[i].doc);
                   int rank = i+1;
                   double noms = hits[i].score;
@@ -80,7 +72,7 @@ public class SearchIndex {
                   }
                 }
               }
-            }
+
             ireader.close();
             directory.close();
           }
@@ -122,5 +114,40 @@ public class SearchIndex {
 
       }
       return null;
+    }
+    private static BooleanQuery getQuery(Document d) throws Exception {
+      String q = d.get("desc");
+      String n = d.get("narr");
+      Map<String, Float> boost = createBoostMap();
+
+      MultiFieldQueryParser qp = new MultiFieldQueryParser(new String[] {"filename", "text"}, analyzer, boost);
+
+      String[] arr = n.split(".");
+      BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
+      booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.MUST);
+
+      for(String s: arr){
+        if(s.contains("not relevant")){
+            s = s.replace("not relevant", "");
+            booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.MUST_NOT);
+
+        }else{
+            s = s.replace("relevant", "");
+            booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.SHOULD);
+        }
+
+
+      }
+
+      return booleanQuery.build();
+
+
+
+
+
+
+
+
+
     }
 }
