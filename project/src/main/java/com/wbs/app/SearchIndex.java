@@ -114,14 +114,17 @@ public class SearchIndex {
       String q = d.get("title") + " " + d.get("desc");
       String n = d.get("narr");
       Map<String, Float> boost = createBoostMap();
-
+      q = q.replace("Description:", "");
+      n = n.replace("Narrative:", "");
       MultiFieldQueryParser qp = new MultiFieldQueryParser(new String[] {"filename", "text"}, analyzer, boost);
+      String[] arr = n.split("\\. ");
 
-      String[] arr = n.split(".");
       BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
       booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.MUST);
 
-      for(String s: arr){
+      for(int i =0; i< arr.length; i++){
+        String s = arr[i];
+        s = (s.toLowerCase()).replace("documents", "");
         if(s.contains("not relevant")){
             s = s.replace("not relevant", "");
             booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.MUST_NOT);
