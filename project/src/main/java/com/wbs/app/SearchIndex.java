@@ -53,23 +53,18 @@ public class SearchIndex {
 
             analyzer = new CustomAnalyzer(stopWords);
 
-            MultiFieldQueryParser qp = new MultiFieldQueryParser(new String[] {"filename", "text"}, analyzer, boost);
-
             ArrayList<Document> loadedQueries = loadQueriesFromFile();
 
             ArrayList<String> vars = new ArrayList<String>();
             for (int j=0; loadedQueries.size()>j; j++){
               Document qd = loadedQueries.get(j);
               BooleanQuery qf = getQuery(qd);
-
               ScoreDoc[] hits = isearcher.search(qf, MAX_RESULTS).scoreDocs;
               for (int i = 0; i < hits.length; i++) {
                   Document hitDoc = isearcher.doc(hits[i].doc);
                   int rank = i+1;
                   double noms = hits[i].score;
-                  if (noms >0){
-                    System.out.println(qd.get("id") + " -- " + hitDoc.get("id") + " "+ rank + " "+ noms  +" -- \n");
-                  }
+                  System.out.print(qd.get("id") + " -- " + hitDoc.get("id") + " "+ rank + " "+ noms  +" -- EXP \n");
                 }
               }
 
@@ -116,7 +111,7 @@ public class SearchIndex {
       return null;
     }
     private static BooleanQuery getQuery(Document d) throws Exception {
-      String q = d.get("desc");
+      String q = d.get("title") + " " + d.get("desc");
       String n = d.get("narr");
       Map<String, Float> boost = createBoostMap();
 

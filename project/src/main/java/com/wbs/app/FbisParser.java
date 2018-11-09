@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.io.FilenameFilter;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
