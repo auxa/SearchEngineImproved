@@ -2,6 +2,9 @@ package com.wbs.app;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.io.FilenameFilter;
@@ -17,9 +20,9 @@ public class FbisParser{
 
     public FbisParser(){}
 
-    public String FBIS_FOLDER = "../project/AssignmentTwo/fbis";
+    public String FBIS_FOLDER = "../Assignment Two/fbis";
 
-    public ArrayList<Document> parseFile(){
+    public ArrayList<Document> parseFile() throws ParseException{
         ArrayList<Document> docList = new ArrayList<Document>();
         File dir = new File(FBIS_FOLDER);
         File[] docs = dir.listFiles(new FilenameFilter() {
@@ -45,7 +48,7 @@ public class FbisParser{
                     customDoc.add(new TextField("id", docNum, Field.Store.YES));
                     customDoc.add(new TextField("filename", title, Field.Store.YES));
                     customDoc.add(new TextField("text", textField, Field.Store.YES));
-                    customDoc.add(new TextField("date", dateElement, Field.Store.YES));
+                    customDoc.add(new TextField("date", convertDate(dateElement), Field.Store.YES));
                     docList.add(customDoc);
                     System.out.println("added doc number: " + docNum);
                 }
@@ -55,5 +58,13 @@ public class FbisParser{
             }
         }
         return docList;
+    }
+
+    private String convertDate(String date) throws ParseException {
+        DateFormat parser = new SimpleDateFormat("dd MMMMM yyyy");
+        Date formattedDate = parser.parse(date);
+
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        return formatter.format(formattedDate);
     }
 }

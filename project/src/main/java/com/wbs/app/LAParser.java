@@ -37,41 +37,39 @@ public class LAParser {
 
 
 	public ArrayList<Document> parseFile(){
-		String docDir="../project/AssignmentTwo/latimes";
+		String docDir="../Assignment Two/latimes";
 		ArrayList<Document> docList = new ArrayList<Document>();
 		File dir = new File(docDir);
-    int index =0;
-  	File[] dl = dir.listFiles();
-    for(File files : dl){
-      index++;
-        System.out.println(files.getName() + " " + index);
+		int index =0;
+		File[] dl = dir.listFiles();
+		for(File files : dl){
+			index++;
+			System.out.println(files.getName() + " " + index);
 
     		File input = files;
   			try {
-  					  org.jsoup.nodes.Document doc = Jsoup.parse(input, "UTF-8");
-  						Elements documents = doc.getElementsByTag("DOC");
-  						for (Element docI: documents){
-    							String docNum=docI.getElementsByTag("DOCNO").text();
-                  Elements date = docI.getElementsByTag("DATE");
+  				org.jsoup.nodes.Document doc = Jsoup.parse(input, "UTF-8");
+  				Elements documents = doc.getElementsByTag("DOC");
+  				for (Element docI: documents){
+  					String docNum=docI.getElementsByTag("DOCNO").text();
+  					Elements date = docI.getElementsByTag("DATE");
 
-                  Elements title= docI.getElementsByTag("HEADLINE");
+  					Elements title= docI.getElementsByTag("HEADLINE");
 
-    							Elements text= docI.getElementsByTag("TEXT");
+    				Elements text= docI.getElementsByTag("TEXT");
 
-    							String textField=getBasicText(text.text());
-    							String titleText= title.text();
-    							Document customDoc = new Document();
-    							customDoc.add(new TextField("id", docNum, Field.Store.YES));
-    							customDoc.add(new TextField("filename", title.text(), Field.Store.YES));
-    							customDoc.add(new TextField("text", textField, Field.Store.YES));
-    							customDoc.add(new TextField("date", date.text(), Field.Store.YES));
-    							docList.add(customDoc);
-
-  						   }
-    					} catch (IOException e) {
-    						e.printStackTrace();
-    					}
-    }
+    				String textField=getBasicText(text.text());
+    				Document customDoc = new Document();
+    				customDoc.add(new TextField("id", docNum, Field.Store.YES));
+    				customDoc.add(new TextField("filename", title.text(), Field.Store.YES));
+    				customDoc.add(new TextField("text", textField, Field.Store.YES));
+    				customDoc.add(new TextField("date", date.text(), Field.Store.YES));
+    				docList.add(customDoc);
+    			}
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+		}
 		return docList;
 	}
 
