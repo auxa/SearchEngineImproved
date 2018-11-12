@@ -49,9 +49,9 @@ public class SearchIndex {
 
             Map<String, Float> boost = createBoostMap();
 
-            CharArraySet stopWords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
+//            CharArraySet stopWords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 
-            analyzer = new CustomAnalyzer(stopWords);
+            analyzer = new CustomAnalyzer();
 
             ArrayList<Document> loadedQueries = loadQueriesFromFile();
 

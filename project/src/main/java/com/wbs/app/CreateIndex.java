@@ -23,9 +23,9 @@ public class CreateIndex {
 	private static String INDEX_DIRECTORY = "../index";
 
 	public static void main(String[] args) throws IOException {
-		CharArraySet stopwords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
+//		CharArraySet stopwords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 
-		Analyzer analyzer = new CustomAnalyzer(stopwords);
+		Analyzer analyzer = new CustomAnalyzer();
 
 		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
 
