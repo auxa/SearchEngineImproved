@@ -2,6 +2,9 @@ package com.wbs.app;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.io.FilenameFilter;
@@ -12,13 +15,12 @@ import org.apache.lucene.document.TextField;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import java.text;
 
 public class FbisParser{
 
     public FbisParser(){}
 
-    public String FBIS_FOLDER = "../project/AssignmentTwo/fbis";
+    public String FBIS_FOLDER = "../Assignment Two/fbis";
 
     public ArrayList<Document> parseFile() throws ParseException{
         ArrayList<Document> docList = new ArrayList<Document>();

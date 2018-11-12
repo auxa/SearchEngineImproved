@@ -44,7 +44,7 @@ public class FrParser {
 	// 		- date: <DATE> tag contents, TextField, String ** Not present in all docs
 
 	public ArrayList<Document> parseFile(){
-		String docDir="../project/AssignmentTwo/fr94";
+		String docDir="../Assignment Two/fr94";
 		ArrayList<Document> docList = new ArrayList<Document>();
 		File dir = new File(docDir);
   		File[] directoryListing = dir.listFiles();

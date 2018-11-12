@@ -31,13 +31,13 @@ public class CreateIndex {
 
 		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
 
-	  indexWriterConfig = indexWriterConfig.setSimilarity(new ClassicSimilarity());
+		indexWriterConfig = indexWriterConfig.setSimilarity(new ClassicSimilarity());
 
 		indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 
 		IndexWriter iwriter = new IndexWriter(directory, indexWriterConfig);
 
-    iwriter = addDocuments(iwriter);
+		iwriter = addDocuments(iwriter);
 
 		iwriter.close();
 		directory.close();
@@ -50,27 +50,22 @@ public class CreateIndex {
       LAParser laParser = new LAParser();
       FrParser frParser = new FrParser();
       FTParser ftParser = new FTParser();
-			FbisParser fbParser = new FbisParser();
+	  FbisParser fbParser = new FbisParser();
 
       ArrayList<Document> myDocs = laParser.parseFile();
       myDocs.addAll(frParser.parseFile());
       myDocs.addAll(ftParser.parseFile());
-			myDocs.addAll(fbParser.parseFile());
+      myDocs.addAll(fbParser.parseFile());
 
       for(Document doc : myDocs){
-        iw.addDocument(doc);
-        System.out.println("Building index "+ doc.get("id"));
+    	  iw.addDocument(doc);
+    	  System.out.println("Building index "+ doc.get("id"));
       }
-     }
+    }
     catch(Exception ex) {
-           System.out.println(
-               "Unable to open file '" +
-               ex + "'");
-     }
-
-
-
-     return iw;
+    	System.out.println("Unable to open file '" + ex + "'");
+    }
+    return iw;
   }
 
 
