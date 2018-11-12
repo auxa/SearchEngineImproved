@@ -50,12 +50,12 @@ public class CreateIndex {
       LAParser laParser = new LAParser();
       FrParser frParser = new FrParser();
       FTParser ftParser = new FTParser();
-			FbisParser fbParser = new FbisParser();
+      FbisParser fbParser = new FbisParser();
 
       ArrayList<Document> myDocs = laParser.parseFile();
       myDocs.addAll(frParser.parseFile());
       myDocs.addAll(ftParser.parseFile());
-			myDocs.addAll(fbParser.parseFile());
+      myDocs.addAll(fbParser.parseFile());
 
       for(Document doc : myDocs){
         iw.addDocument(doc);
