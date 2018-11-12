@@ -63,7 +63,7 @@ public class CreateIndex {
       }
     }
     catch(Exception ex) {
-    	System.out.println("Unable to open file '" + ex + "'");
+    	System.out.println( "Unable to open file '" + ex + "'");
     }
     return iw;
   }

@@ -64,7 +64,6 @@ public class FrParser {
 								Elements date = docI.getElementsByTag("DATE");
 								Elements title= docI.getElementsByTag("DOCTITLE");
 								String textField=getBasicText(text.text());
-								String titleText= title.text();
 								Document customDoc = new Document();
 								customDoc.add(new TextField("id", docNum, Field.Store.YES));
 								customDoc.add(new TextField("filename", title.text(), Field.Store.YES));
