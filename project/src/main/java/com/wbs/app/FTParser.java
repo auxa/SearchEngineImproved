@@ -2,6 +2,9 @@ package com.wbs.app;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -22,7 +25,9 @@ public class FTParser {
 		ArrayList<Document> docList = new ArrayList<Document>();
 		File dir = new File(FT_FOLDER);
 		File[] subDirs = dir.listFiles();
-		if (subDirs != null) {
+		if (subDirs == null) {
+			return null;
+		}
 		for (File subDir : subDirs) {
 			if(!subDir.isDirectory())
 				continue;
@@ -44,21 +49,27 @@ public class FTParser {
 							customDoc.add(new TextField("id", docNum, Field.Store.YES));
 							customDoc.add(new TextField("filename", title, Field.Store.YES));
 							customDoc.add(new TextField("text", textField, Field.Store.YES));
-							customDoc.add(new TextField("date", dateElement.text(), Field.Store.YES));
+							customDoc.add(new TextField("date", convertDate(dateElement.text()), Field.Store.YES));
 							docList.add(customDoc);
 							System.out.println("added doc number FT:  "+ docNum);
 
 						}
-					} catch (IOException e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
     			}
 			}
 		}
-  	}
-		else {
+		return docList;
+	}
+	
+	private String convertDate(String date) throws ParseException {
+	    DateFormat parser = new SimpleDateFormat("yymmdd");
+	    Date formattedDate = parser.parse(date);
 
-		}
-	return docList;
+	    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+	    return formatter.format(formattedDate);
+	}
 }
-}
+
+

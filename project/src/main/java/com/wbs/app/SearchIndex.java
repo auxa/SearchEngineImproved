@@ -45,7 +45,7 @@ public class SearchIndex {
             IndexReader ireader = DirectoryReader.open(directory);
             IndexSearcher isearcher = new IndexSearcher(ireader);
             // Change the "ClassicSimilarity" to change similarity scoring
-					 	isearcher.setSimilarity(new ClassicSimilarity());
+			// isearcher.setSimilarity(new ClassicSimilarity());
 
             Map<String, Float> boost = createBoostMap();
 
@@ -128,24 +128,12 @@ public class SearchIndex {
         if(s.contains("not relevant")){
             s = s.replace("not relevant", "");
             booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.MUST_NOT);
-
         }else{
             s = s.replace("relevant", "");
             booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.SHOULD);
         }
-
-
       }
 
       return booleanQuery.build();
-
-
-
-
-
-
-
-
-
     }
 }
