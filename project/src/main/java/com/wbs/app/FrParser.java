@@ -44,7 +44,7 @@ public class FrParser {
 	// 		- date: <DATE> tag contents, TextField, String ** Not present in all docs
 
 	public ArrayList<Document> parseFile(){
-		String docDir="../Assignment Two/fr94";
+		String docDir="../project/AssignmentTwo/fr94";
 		ArrayList<Document> docList = new ArrayList<Document>();
 		File dir = new File(docDir);
   		File[] directoryListing = dir.listFiles();
@@ -64,7 +64,6 @@ public class FrParser {
 								Elements date = docI.getElementsByTag("DATE");
 								Elements title= docI.getElementsByTag("DOCTITLE");
 								String textField=getBasicText(text.text());
-								String titleText= title.text();
 								Document customDoc = new Document();
 								customDoc.add(new TextField("id", docNum, Field.Store.YES));
 								customDoc.add(new TextField("filename", title.text(), Field.Store.YES));

@@ -17,7 +17,7 @@ import org.jsoup.select.Elements;
 
 public class FTParser {
 
-	public String FT_FOLDER = "../Assignment Two/ft";
+	public String FT_FOLDER = "../project/AssignmentTwo/ft";
 
 	public FTParser() {}
 

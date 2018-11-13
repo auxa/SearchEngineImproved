@@ -15,12 +15,13 @@ import org.apache.lucene.document.TextField;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import java.text.*;
 
 public class FbisParser{
 
     public FbisParser(){}
 
-    public String FBIS_FOLDER = "../Assignment Two/fbis";
+    public String FBIS_FOLDER = "../project/AssignmentTwo/fbis";
 
     public ArrayList<Document> parseFile() throws ParseException{
         ArrayList<Document> docList = new ArrayList<Document>();
@@ -61,10 +62,17 @@ public class FbisParser{
     }
 
     private String convertDate(String date) throws ParseException {
-        DateFormat parser = new SimpleDateFormat("dd MMMMM yyyy");
-        Date formattedDate = parser.parse(date);
+        try {
+            DateFormat parser = new SimpleDateFormat("dd MMMMM yyyy");
+            Date formattedDate = parser.parse(date);
 
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        return formatter.format(formattedDate);
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            return formatter.format(formattedDate);
+        }
+        catch (Exception ex)
+        {
+            System.out.println(ex.toString());
+            return "";
+        }
     }
 }

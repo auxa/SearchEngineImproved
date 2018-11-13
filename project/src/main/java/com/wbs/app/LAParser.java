@@ -37,7 +37,7 @@ public class LAParser {
 
 
 	public ArrayList<Document> parseFile(){
-		String docDir="../Assignment Two/latimes";
+		String docDir="../project/AssignmentTwo/latimes";
 		ArrayList<Document> docList = new ArrayList<Document>();
 		File dir = new File(docDir);
 		int index =0;

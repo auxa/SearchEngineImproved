@@ -19,13 +19,13 @@ import org.apache.lucene.search.similarities.*;
 
 public class CreateIndex {
 
- 	// Directory where the search index will be saved
+	// Directory where the search index will be saved
 	private static String INDEX_DIRECTORY = "../index";
 
 	public static void main(String[] args) throws IOException {
-		CharArraySet stopwords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
+//		CharArraySet stopwords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 
-		Analyzer analyzer = new CustomAnalyzer(stopwords);
+		Analyzer analyzer = new CustomAnalyzer();
 
 		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
 
@@ -44,29 +44,29 @@ public class CreateIndex {
 
 	}
 
-  private static IndexWriter addDocuments(IndexWriter iw){
-    try {
+	private static IndexWriter addDocuments(IndexWriter iw){
+		try {
 
-      LAParser laParser = new LAParser();
-      FrParser frParser = new FrParser();
-      FTParser ftParser = new FTParser();
-	  FbisParser fbParser = new FbisParser();
+			LAParser laParser = new LAParser();
+			FrParser frParser = new FrParser();
+			FTParser ftParser = new FTParser();
+			FbisParser fbParser = new FbisParser();
 
-      ArrayList<Document> myDocs = laParser.parseFile();
-      myDocs.addAll(frParser.parseFile());
-      myDocs.addAll(ftParser.parseFile());
-      myDocs.addAll(fbParser.parseFile());
+			ArrayList<Document> myDocs = laParser.parseFile();
+			myDocs.addAll(frParser.parseFile());
+			myDocs.addAll(ftParser.parseFile());
+			myDocs.addAll(fbParser.parseFile());
 
-      for(Document doc : myDocs){
-    	  iw.addDocument(doc);
-    	  System.out.println("Building index "+ doc.get("id"));
-      }
-    }
-    catch(Exception ex) {
-    	System.out.println("Unable to open file '" + ex + "'");
-    }
-    return iw;
-  }
+			for(Document doc : myDocs){
+				iw.addDocument(doc);
+				System.out.println("Building index "+ doc.get("id"));
+			}
+		}
+		catch(Exception ex) {
+			System.out.println( "Unable to open file '" + ex + "'");
+		}
+		return iw;
+	}
 
 
 }
