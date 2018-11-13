@@ -37,7 +37,7 @@ public class SearchIndex {
           private static Analyzer analyzer;
           private static String INDEX_DIRECTORY = "../index";
 
-          private static int MAX_RESULTS = 30; //subject to change
+          private static int MAX_RESULTS = 1000; //subject to change
 
           public static void main(String[] args) throws Exception {
 
@@ -54,8 +54,9 @@ public class SearchIndex {
             analyzer = new CustomAnalyzer();
 
             ArrayList<Document> loadedQueries = loadQueriesFromFile();
-
+            ArrayList<String> qrels = new ArrayList<String>();
             ArrayList<String> vars = new ArrayList<String>();
+            String bob = "";
             for (int j=0; loadedQueries.size()>j; j++){
               Document qd = loadedQueries.get(j);
               BooleanQuery qf = getQuery(qd);
@@ -64,21 +65,22 @@ public class SearchIndex {
                   Document hitDoc = isearcher.doc(hits[i].doc);
                   int rank = i+1;
                   double noms = hits[i].score;
-                  System.out.print(qd.get("id") + " -- " + hitDoc.get("id") + " "+ rank + " "+ noms  +" -- EXP \n");
+                  bob = (qd.get("id") + " -- " + hitDoc.get("id") + " "+ rank + " "+ noms  +" -- EXP \n");
+                  qrels.add(bob);
                 }
               }
-
+            writeToFile(qrels);
             ireader.close();
             directory.close();
           }
       private static Map<String, Float> createBoostMap(){
         Map<String, Float> boost = new HashMap<>();
-        boost.put("filename", (float) 0.52);
-        boost.put("text",(float) 0.48);
+        boost.put("filename", (float) 0.1);
+        boost.put("text",(float) 0.90);
         return boost;
       }
 
-      /*
+
       private static void writeToFile(ArrayList<String> results){
         BufferedWriter writer = null;
         try {
@@ -96,7 +98,7 @@ public class SearchIndex {
               }
           }
       }
-      */
+
       private static ArrayList<Document> loadQueriesFromFile() {
         try {
           TopicsParser myParser = new TopicsParser();

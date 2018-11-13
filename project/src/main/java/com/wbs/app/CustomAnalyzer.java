@@ -47,7 +47,7 @@ import java.util.ArrayList;
 //}
 
 
-public class CustomAnalyzer extends Analyzer{
+public class CustomAnalyzer extends StopwordAnalyzerBase{
 
 	protected TokenStreamComponents createComponents(String s) {
 		final Tokenizer source = new StandardTokenizer();
