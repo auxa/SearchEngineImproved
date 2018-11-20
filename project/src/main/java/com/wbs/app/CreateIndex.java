@@ -93,11 +93,9 @@ public class CreateIndex {
 	}
 
 	public static void printMap(HashMap mp) {
-		Iterator it = mp.entrySet().iterator();
-    while (it.hasNext()) {
-			HashMap.Entry pair = (HashMap.Entry)it.next();
-      System.out.println(pair.getKey() + " = " + pair.getValue());
-      it.remove(); // avoids a ConcurrentModificationException
+
+		for (Integer key : mp.keySet()) {
+			System.out.println(key mp.get(key));
 		}
 	}
 }
