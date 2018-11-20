@@ -32,7 +32,7 @@ public class CreateIndex {
 
 		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
 
-		indexWriterConfig = indexWriterConfig.setSimilarity(new ClassicSimilarity());
+//		indexWriterConfig = indexWriterConfig.setSimilarity(new ClassicSimilarity());
 
 		indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 
