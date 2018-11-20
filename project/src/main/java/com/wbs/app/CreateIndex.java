@@ -94,8 +94,8 @@ public class CreateIndex {
 
 	public static void printMap(HashMap mp) {
 
-		for (Integer key : mp.keySet()) {
-			System.out.println(key mp.get(key));
+		for (Object key : mp.keySet()) {
+			System.out.println(key + ": " + mp.get(key));
 		}
 	}
 }
