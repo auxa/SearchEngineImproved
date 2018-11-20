@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.io.*;
 import java.util.ArrayList;
-
+import java.util.Iterator;
+import java.util.HashMap;
 import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -56,6 +57,8 @@ public class CreateIndex {
 			myDocs.addAll(frParser.parseFile());
 			myDocs.addAll(ftParser.parseFile());
 			myDocs.addAll(fbParser.parseFile());
+			// HashMap zipfDist = zipfCalculator(myDocs);
+			// printMap(zipfDist);
 
 			for(Document doc : myDocs){
 				iw.addDocument(doc);
@@ -68,5 +71,33 @@ public class CreateIndex {
 		return iw;
 	}
 
+	public static HashMap zipfCalculator(ArrayList<Document> myDocs){
+		HashMap zipfDist = new HashMap();
 
+		for(int i=0; i<myDocs.size(); i++){
+			Document doc = myDocs.get(i);
+			String text = doc.get("text");
+			String[] textArr = text.split(" ");
+
+			for(int j=0; j<textArr.length; j++){
+				if(zipfDist.get(textArr[j])==null){
+					zipfDist.put(textArr[j], new Integer(1));
+				}
+				else {
+					int val = (Integer) zipfDist.get(textArr[j]);
+					zipfDist.put(textArr[j], new Integer(val+1));
+				}
+			}
+		}
+		return zipfDist;
+	}
+
+	public static void printMap(HashMap mp) {
+		Iterator it = mp.entrySet().iterator();
+    while (it.hasNext()) {
+			HashMap.Entry pair = (HashMap.Entry)it.next();
+      System.out.println(pair.getKey() + " = " + pair.getValue());
+      it.remove(); // avoids a ConcurrentModificationException
+		}
+	}
 }
