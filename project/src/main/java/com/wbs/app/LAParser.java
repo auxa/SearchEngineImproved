@@ -37,12 +37,14 @@ public class LAParser {
   					Elements title= docI.getElementsByTag("HEADLINE");
 
     				Elements text= docI.getElementsByTag("TEXT");
+						Elements text1= docI.getElementsByTag("GRAPHIC");
 
-    				String textField=getBasicText(text.text());
+						String final_text = text.text() + text1.text();
+
     				Document customDoc = new Document();
     				customDoc.add(new TextField("id", docNum, Field.Store.YES));
     				customDoc.add(new TextField("filename", title.text(), Field.Store.YES));
-    				customDoc.add(new TextField("text", textField, Field.Store.YES));
+    				customDoc.add(new TextField("text", final_text, Field.Store.YES));
     				customDoc.add(new TextField("date", date.text(), Field.Store.YES));
     				docList.add(customDoc);
     			}
@@ -53,26 +55,4 @@ public class LAParser {
 		return docList;
 	}
 
-	public String getBasicText(String text){
-		String [] lines = text.split("\r\n");
-		String cleanedText="";
-		for(int i=0; i<lines.length; i++){
-			if(!(lines[i].contains("<!--") || lines[i].contains("<AGENCY>") || lines[i].contains("<DATE>") || lines[i].contains("<DOCTITLE>") ||
-				lines[i].contains("<ACTION>") || lines[i].contains("<SUMMARY>") || lines[i].contains("<FOOTNAME>") || lines[i].contains("<FURTHER>") ||
-				lines[i].contains("<SIGNER>") || lines[i].contains("<SIGNJOB>") || lines[i].contains("<FRFILING>") || lines[i].contains("<BILLING>") ||
-				lines[i].contains("<FOOTNOTE>") || lines[i].contains("<FOOTCITE>") || lines[i].contains("<TABLE>") || lines[i].contains("<ADDRESS>") ||
-				lines[i].contains("<IMPORT>") || lines[i].contains("<SUPPLEM>") || lines[i].contains("<USDEPT>") || lines[i].contains("<USBUREAU>") ||
-				lines[i].contains("<CFRNO>") || lines[i].contains("<RINDOCK>") || lines[i].contains("<FRFILING>") || lines[i].contains("<BILLING>") ||
-				lines[i].contains("</AGENCY>") || lines[i].contains("</DATE>") || lines[i].contains("</DOCTITLE>") ||
-				lines[i].contains("</ACTION>") || lines[i].contains("</SUMMARY>") || lines[i].contains("</FOOTNAME>") || lines[i].contains("</FURTHER>") ||
-				lines[i].contains("</SIGNER>") || lines[i].contains("</SIGNJOB>") || lines[i].contains("</FRFILING>") || lines[i].contains("</BILLING>") ||
-				lines[i].contains("</FOOTNOTE>") || lines[i].contains("</FOOTCITE>") || lines[i].contains("</TABLE>") || lines[i].contains("</ADDRESS>") ||
-				lines[i].contains("</IMPORT>") || lines[i].contains("</SUPPLEM>") || lines[i].contains("</USDEPT>") || lines[i].contains("</USBUREAU>") ||
-				lines[i].contains("</CFRNO>") || lines[i].contains("</RINDOCK>") || lines[i].contains("</FRFILING>") || lines[i].contains("</BILLING>" )))
-				{
-					cleanedText+=(lines[i] + "\r\n");
-				}
-			}
-			return cleanedText;
-		}
 }

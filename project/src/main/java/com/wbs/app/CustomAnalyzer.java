@@ -14,23 +14,28 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.en.PorterStemFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.analysis.core.StopAnalyzer;
+import org.apache.lucene.analysis.en.EnglishMinimalStemFilter;
+import org.apache.lucene.analysis.en.EnglishPossessiveFilter;
+import org.apache.lucene.analysis.en.KStemFilter;
+import org.apache.lucene.analysis.en.PorterStemFilter;
+import org.apache.lucene.analysis.standard.ClassicTokenizer;
+
 
 public class CustomAnalyzer extends StopwordAnalyzerBase{
 
 	protected TokenStreamComponents createComponents(String s) {
 		final Tokenizer source = new StandardTokenizer();
 
-		TokenStream tok = source;
-		tok = new LowerCaseFilter(tok);
+		TokenStream tok = new LowerCaseFilter(source);
 		try {
 			tok = new StopFilter(tok, getStopWords());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		tok = new PorterStemFilter(tok);
-
 		return new TokenStreamComponents(source, tok);
+
 	}
 
 	protected CharArraySet getStopWords() throws IOException {

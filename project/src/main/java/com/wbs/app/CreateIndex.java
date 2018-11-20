@@ -47,8 +47,8 @@ public class CreateIndex {
 			myDocs.addAll(frParser.parseFile());
 			myDocs.addAll(ftParser.parseFile());
 			myDocs.addAll(fbParser.parseFile());
-			// HashMap zipfDist = zipfCalculator(myDocs);
-			// printMap(zipfDist);
+		//	HashMap zipfDist = zipfCalculator(myDocs);
+		//	printMap(zipfDist);
 
 			for(Document doc : myDocs){
 				iw.addDocument(doc);
@@ -58,6 +58,7 @@ public class CreateIndex {
 		catch(Exception ex) {
 			System.out.println( "Unable to open file '" + ex + "'");
 		}
+
 		return iw;
 	}
 
