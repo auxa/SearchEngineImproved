@@ -15,7 +15,6 @@ import org.apache.lucene.document.TextField;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import java.text.*;
 
 public class FbisParser{
 

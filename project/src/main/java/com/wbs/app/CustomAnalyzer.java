@@ -1,58 +1,26 @@
 package com.wbs.app;
 
-import org.apache.lucene.analysis.CharArraySet;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
 import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.StopwordAnalyzerBase;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.core.StopAnalyzer;
 import org.apache.lucene.analysis.en.PorterStemFilter;
-import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
-
-import org.apache.lucene.analysis.*;
-import org.apache.lucene.analysis.CharArraySet;
-import org.apache.lucene.analysis.core.StopAnalyzer;
-import org.apache.lucene.analysis.en.PorterStemFilter;
-import org.apache.lucene.analysis.standard.StandardFilter;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
-
-import java.io.*;
-import java.util.ArrayList;
-
-//public class CustomAnalyzer extends StopwordAnalyzerBase {
-//	public CustomAnalyzer(CharArraySet stopwords) {
-//		super(stopwords);
-//	}
-//	public CharArraySet getStopwords() {
-//			return stopwords;
-//	}
-//	@Override
-//	protected TokenStreamComponents createComponents(final String fieldName) {
-//		final Tokenizer src;
-//	    StandardTokenizer t = new StandardTokenizer();
-//	    src = t;
-//			CharArraySet stopWords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
-//
-//	    TokenStream tok = new StandardFilter(src);
-//	    tok = new LowerCaseFilter(tok);
-//	    tok = new StopFilter(tok, stopWords);
-//      	tok = new PorterStemFilter(tok);
-//
-//	    return new TokenStreamComponents(src, tok);
-//	}
-//
-//}
-
 
 public class CustomAnalyzer extends StopwordAnalyzerBase{
 
 	protected TokenStreamComponents createComponents(String s) {
 		final Tokenizer source = new StandardTokenizer();
 
-		TokenStream tok = new StandardFilter(source);
+		TokenStream tok = source;
 		tok = new LowerCaseFilter(tok);
 		try {
 			tok = new StopFilter(tok, getStopWords());
@@ -75,7 +43,7 @@ public class CustomAnalyzer extends StopwordAnalyzerBase{
 		{
 			stopWordsSet.add(line);
 		}
-
+		bufferedReader.close();
 		return  new CharArraySet(stopWordsSet, true);
 	}
 }

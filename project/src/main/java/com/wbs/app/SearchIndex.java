@@ -44,10 +44,6 @@ public class SearchIndex {
             Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
             IndexReader ireader = DirectoryReader.open(directory);
             IndexSearcher isearcher = new IndexSearcher(ireader);
-            // Change the "ClassicSimilarity" to change similarity scoring
-			// isearcher.setSimilarity(new ClassicSimilarity());
-
-            Map<String, Float> boost = createBoostMap();
 
 //            CharArraySet stopWords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 
@@ -55,7 +51,6 @@ public class SearchIndex {
 
             ArrayList<Document> loadedQueries = loadQueriesFromFile();
             ArrayList<String> qrels = new ArrayList<String>();
-            ArrayList<String> vars = new ArrayList<String>();
             String bob = "";
             for (int j=0; loadedQueries.size()>j; j++){
               Document qd = loadedQueries.get(j);
