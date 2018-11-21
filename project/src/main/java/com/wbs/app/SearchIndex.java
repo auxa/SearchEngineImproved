@@ -19,6 +19,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BoostQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.Analyzer;
@@ -44,29 +45,24 @@ public class SearchIndex {
             Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
             IndexReader ireader = DirectoryReader.open(directory);
             IndexSearcher isearcher = new IndexSearcher(ireader);
-            // Change the "ClassicSimilarity" to change similarity scoring
-			// isearcher.setSimilarity(new ClassicSimilarity());
-
-            Map<String, Float> boost = createBoostMap();
-
-//            CharArraySet stopWords = CharArraySet.copy(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 
             analyzer = new CustomAnalyzer();
 
             ArrayList<Document> loadedQueries = loadQueriesFromFile();
             ArrayList<String> qrels = new ArrayList<String>();
-            ArrayList<String> vars = new ArrayList<String>();
             String bob = "";
             for (int j=0; loadedQueries.size()>j; j++){
-              Document qd = loadedQueries.get(j);
-              BooleanQuery qf = getQuery(qd);
-              ScoreDoc[] hits = isearcher.search(qf, MAX_RESULTS).scoreDocs;
-              for (int i = 0; i < hits.length; i++) {
-                  Document hitDoc = isearcher.doc(hits[i].doc);
-                  int rank = i+1;
-                  double noms = hits[i].score;
-                  bob = (qd.get("id") + " -- " + hitDoc.get("id") + " "+ rank + " "+ noms  +" -- EXP \n");
-                  qrels.add(bob);
+                Document qd = loadedQueries.get(j);
+                BooleanQuery qf = getQuery(qd);
+                ScoreDoc[] hits = isearcher.search(qf, MAX_RESULTS).scoreDocs;
+                System.out.println(" " +  qd.get("id")  + " " + hits.length);
+                for (int i = 0; i < hits.length; i++) {
+
+                    Document hitDoc = isearcher.doc(hits[i].doc);
+                    int rank = i+1;
+                    double noms = hits[i].score;
+                    bob = (qd.get("id") + " -- " + hitDoc.get("id") + " "+ rank + " "+ noms  +" -- EXP \n");
+                    qrels.add(bob);
                 }
               }
             writeToFile(qrels);
@@ -129,13 +125,15 @@ public class SearchIndex {
         s = (s.toLowerCase()).replace("documents", "");
         if(s.contains("not relevant")){
             s = s.replace("not relevant", "");
-            booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.MUST_NOT);
+          //  booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(q.trim())), -0.1f), BooleanClause.Occur.MUST);
         }else{
             s = s.replace("relevant", "");
-            booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.SHOULD);
+            booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.MUST);
         }
       }
-
       return booleanQuery.build();
     }
+    private static Query wrapWithBoost(Query query, float boost) {
+        return new BoostQuery(query, boost);
+  }
 }

@@ -40,31 +40,28 @@ public class TopicsParser {
 		String docDir="../project/topics";
 		ArrayList<Document> docList = new ArrayList<Document>();
 		File dir = new File(docDir);
-    int index =0;
-  	try {
-  			  org.jsoup.nodes.Document doc = Jsoup.parse(dir, "UTF-8");
-					Elements documents = doc.getElementsByTag("top");
-  				for (Element docI: documents){
-    			     String docNum=docI.getElementsByTag("num").text();
-               String[] nums = docNum.split(" ");
+		try {
+			org.jsoup.nodes.Document doc = Jsoup.parse(dir, "UTF-8");
+			Elements documents = doc.getElementsByTag("top");
+			for (Element docI: documents){
+				String docNum=docI.getElementsByTag("num").text();
+				String[] nums = docNum.split(" ");
 
-               Elements title = docI.getElementsByTag("title");
+				Elements title = docI.getElementsByTag("title");
 
-               Elements desc = docI.getElementsByTag("desc");
+				Elements desc = docI.getElementsByTag("desc");
 
-               Elements narr= docI.getElementsByTag("narr");
-
-    					 Document customDoc = new Document();
-    					 customDoc.add(new TextField("id", nums[1], Field.Store.YES));
-    					 customDoc.add(new TextField("title", title.text(), Field.Store.YES));
-    					 customDoc.add(new TextField("desc", desc.text(), Field.Store.YES));
-    					 customDoc.add(new TextField("narr", narr.text(), Field.Store.YES));
-    					 docList.add(customDoc);
-
-   				}
-    		} catch (IOException e) {
-    					e.printStackTrace();
+				Elements narr= docI.getElementsByTag("narr");
+				Document customDoc = new Document();
+    			customDoc.add(new TextField("id", nums[1], Field.Store.YES));
+    			customDoc.add(new TextField("title", title.text(), Field.Store.YES));
+    			customDoc.add(new TextField("desc", desc.text(), Field.Store.YES));
+    			customDoc.add(new TextField("narr", narr.text(), Field.Store.YES));
+    			docList.add(customDoc);
     		}
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
 		return docList;
 	}
 
