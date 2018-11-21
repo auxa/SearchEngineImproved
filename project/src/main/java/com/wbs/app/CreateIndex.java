@@ -2,7 +2,6 @@ package com.wbs.app;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-<<<<<<< HEAD
 import java.io.*;
 import java.util.Comparator;
 import java.util.SortedSet;
@@ -11,9 +10,6 @@ import java.util.TreeSet;
 import java.util.TreeMap;
 import java.util.Map;
 import java.util.Iterator;
-=======
-import java.util.ArrayList;
->>>>>>> 12bc277a4d6dc05f4814e0f5ad2e74cb71fa5eeb
 import java.util.HashMap;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -58,12 +54,7 @@ public class CreateIndex {
 			myDocs.addAll(frParser.parseFile());
 			myDocs.addAll(ftParser.parseFile());
 			myDocs.addAll(fbParser.parseFile());
-<<<<<<< HEAD
 			TreeMap zipfDist = zipfCalculator(myDocs);
-=======
-
-			HashMap zipfDist = zipfCalculator(myDocs);
->>>>>>> 12bc277a4d6dc05f4814e0f5ad2e74cb71fa5eeb
 			printMap(zipfDist);
 
 			for(Document doc : myDocs){
