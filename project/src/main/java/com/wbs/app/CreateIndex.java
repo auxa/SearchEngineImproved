@@ -57,8 +57,8 @@ public class CreateIndex {
 			myDocs.addAll(frParser.parseFile());
 			myDocs.addAll(ftParser.parseFile());
 			myDocs.addAll(fbParser.parseFile());
-			// HashMap zipfDist = zipfCalculator(myDocs);
-			// printMap(zipfDist);
+			HashMap zipfDist = zipfCalculator(myDocs);
+			printMap(zipfDist);
 
 			for(Document doc : myDocs){
 				iw.addDocument(doc);
