@@ -33,6 +33,7 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.analysis.core.StopAnalyzer;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.search.similarities.*;
+import org.apache.lucene.search.FuzzyQuery;
 
 public class SearchIndex {
           private static Analyzer analyzer;
@@ -119,6 +120,9 @@ public class SearchIndex {
 
       BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
       booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.MUST);
+
+      // FuzzyQuery.Builder fuzzQuery = new FuzzyQuery.Builder();
+      // fuzzQuery.add(qp.parse(QueryParser.escape(q.trim())), 10)
 
       for(int i =0; i< arr.length; i++){
         String s = arr[i];

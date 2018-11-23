@@ -2,7 +2,14 @@ package com.wbs.app;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.io.*;
+import java.util.Comparator;
+import java.util.SortedSet;
 import java.util.ArrayList;
+import java.util.TreeSet;
+import java.util.TreeMap;
+import java.util.Map;
+import java.util.Iterator;
 import java.util.HashMap;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -41,15 +48,15 @@ public class CreateIndex {
 
 			FrParser frParser = new FrParser();
 			LAParser laParser = new LAParser();
-			//FTParser ftParser = new FTParser();
-			//FbisParser fbParser = new FbisParser();
+			FTParser ftParser = new FTParser();
+			FbisParser fbParser = new FbisParser();
 
-			ArrayList<Document> myDocs = frParser.parseFile();
-			myDocs.addAll(laParser.parseFile());
-		//myDocs.addAll(ftParser.parseFile());
-	//		myDocs.addAll(fbParser.parseFile());
-		//	HashMap zipfDist = zipfCalculator(myDocs);
-		//	printMap(zipfDist);
+			ArrayList<Document> myDocs = laParser.parseFile();
+			myDocs.addAll(frParser.parseFile());
+			myDocs.addAll(ftParser.parseFile());
+			myDocs.addAll(fbParser.parseFile());
+			// TreeMap zipfDist = zipfCalculator(myDocs);
+			// printMap(zipfDist);
 
 			for(Document doc : myDocs){
 				iw.addDocument(doc);
@@ -63,9 +70,9 @@ public class CreateIndex {
 		return iw;
 	}
 
-	public static HashMap zipfCalculator(ArrayList<Document> myDocs){
-		HashMap zipfDist = new HashMap();
-
+	public static TreeMap zipfCalculator(ArrayList<Document> myDocs){
+		// HashMap zipfDist = new HashMap();
+		TreeMap<String, Integer> zipfDist = new TreeMap<>();
 		for(int i=0; i<myDocs.size(); i++){
 			Document doc = myDocs.get(i);
 			String text = doc.get("text");
@@ -84,10 +91,21 @@ public class CreateIndex {
 		return zipfDist;
 	}
 
-	public static void printMap(HashMap mp) {
-
-		for (Object key : mp.keySet()) {
-			System.out.println(key + ": " + mp.get(key));
-		}
+	public static void printMap(TreeMap mp) {
+		System.out.println(entriesSortedByValues(mp));
 	}
+
+	static <K,V extends Comparable<? super V>>
+	SortedSet<Map.Entry<K,V>> entriesSortedByValues(Map<K,V> map) {
+    SortedSet<Map.Entry<K,V>> sortedEntries = new TreeSet<Map.Entry<K,V>>(
+        new Comparator<Map.Entry<K,V>>() {
+            @Override public int compare(Map.Entry<K,V> e1, Map.Entry<K,V> e2) {
+                int res = e1.getValue().compareTo(e2.getValue());
+                return res != 0 ? res : 1;
+            }
+        }
+    );
+    sortedEntries.addAll(map.entrySet());
+    return sortedEntries;
+}
 }
