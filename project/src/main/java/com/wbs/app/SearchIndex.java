@@ -129,10 +129,10 @@ public class SearchIndex {
         s = (s.toLowerCase()).replace("documents", "");
         if(s.contains("not relevant")){
             s = s.replace("not relevant", "");
-          //  booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), -0.1f), BooleanClause.Occur.MUST);
+          //  booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(q.trim())), -0.1f), BooleanClause.Occur.MUST);
         }else{
             s = s.replace("relevant", "");
-            booleanQuery.add(qp.parse(QueryParser.escape(s.trim())), BooleanClause.Occur.MUST);
+            booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.SHOULD);
         }
       }
       return booleanQuery.build();
