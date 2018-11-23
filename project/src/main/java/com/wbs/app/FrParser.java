@@ -64,13 +64,26 @@ public class FrParser {
 								Elements date = docI.getElementsByTag("DATE");
 								Elements title= docI.getElementsByTag("DOCTITLE");
 								String textField=getBasicText(text.text());
+								String title_d = title.text();
+								if (title_d.equals("")){
+										String parent = docI.getElementsByTag("PARENT").text();
+										if (!(parent.equals(""))){
+												for (Element docB: documents){
+													if ((docB.getElementsByTag("DOCNO").text()).equals(parent)){
+														title_d = docB.getElementsByTag("DOCTITLE").text();
+													}
+												}
+											}
+								}
+
+
 								Document customDoc = new Document();
 								customDoc.add(new TextField("id", docNum, Field.Store.YES));
-								customDoc.add(new TextField("filename", title.text(), Field.Store.YES));
+								customDoc.add(new TextField("filename", title_d, Field.Store.YES));
 								customDoc.add(new TextField("text", textField, Field.Store.YES));
 								customDoc.add(new TextField("date", date.text(), Field.Store.YES));
 								docList.add(customDoc);
-								System.out.println("added doc number FT:  "+ docNum);
+								System.out.println("added doc number FR:  "+ docNum);
 
 							}
 						} catch (IOException e) {

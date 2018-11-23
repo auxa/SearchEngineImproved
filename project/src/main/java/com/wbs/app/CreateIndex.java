@@ -38,15 +38,16 @@ public class CreateIndex {
 	private static IndexWriter addDocuments(IndexWriter iw){
 		try {
 
-			LAParser laParser = new LAParser();
-			FrParser frParser = new FrParser();
-			FTParser ftParser = new FTParser();
-			FbisParser fbParser = new FbisParser();
 
-			ArrayList<Document> myDocs = laParser.parseFile();
-			myDocs.addAll(frParser.parseFile());
-			myDocs.addAll(ftParser.parseFile());
-			myDocs.addAll(fbParser.parseFile());
+			FrParser frParser = new FrParser();
+			LAParser laParser = new LAParser();
+			//FTParser ftParser = new FTParser();
+			//FbisParser fbParser = new FbisParser();
+
+			ArrayList<Document> myDocs = frParser.parseFile();
+			myDocs.addAll(laParser.parseFile());
+		//myDocs.addAll(ftParser.parseFile());
+	//		myDocs.addAll(fbParser.parseFile());
 		//	HashMap zipfDist = zipfCalculator(myDocs);
 		//	printMap(zipfDist);
 
