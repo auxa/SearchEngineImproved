@@ -33,6 +33,7 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.analysis.core.StopAnalyzer;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.search.similarities.*;
+import org.apache.lucene.search.FuzzyQuery;
 
 public class SearchIndex {
           private static Analyzer analyzer;
@@ -120,15 +121,18 @@ public class SearchIndex {
       BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
       booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.MUST);
 
+      // FuzzyQuery.Builder fuzzQuery = new FuzzyQuery.Builder();
+      // fuzzQuery.add(qp.parse(QueryParser.escape(q.trim())), 10)
+
       for(int i =0; i< arr.length; i++){
         String s = arr[i];
         s = (s.toLowerCase()).replace("documents", "");
         if(s.contains("not relevant")){
             s = s.replace("not relevant", "");
-          //  booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(q.trim())), -0.1f), BooleanClause.Occur.MUST);
+          //  booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), -0.1f), BooleanClause.Occur.MUST);
         }else{
             s = s.replace("relevant", "");
-            booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.MUST);
+            booleanQuery.add(qp.parse(QueryParser.escape(s.trim())), BooleanClause.Occur.MUST);
         }
       }
       return booleanQuery.build();
