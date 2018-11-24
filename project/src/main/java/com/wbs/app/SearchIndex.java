@@ -33,7 +33,6 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.analysis.core.StopAnalyzer;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.search.similarities.*;
-import org.apache.lucene.search.FuzzyQuery;
 
 public class SearchIndex {
           private static Analyzer analyzer;
@@ -54,7 +53,7 @@ public class SearchIndex {
             String bob = "";
             for (int j=0; loadedQueries.size()>j; j++){
                 Document qd = loadedQueries.get(j);
-                BooleanQuery qf = getQuery(qd);
+                Query qf = getQuery(qd);
                 ScoreDoc[] hits = isearcher.search(qf, MAX_RESULTS).scoreDocs;
                 System.out.println(" " +  qd.get("id")  + " " + hits.length);
                 for (int i = 0; i < hits.length; i++) {
@@ -109,7 +108,7 @@ public class SearchIndex {
       }
       return null;
     }
-    private static BooleanQuery getQuery(Document d) throws Exception {
+    private static Query getQuery(Document d) throws Exception {
       String q = d.get("title") + " " + d.get("desc");
       String n = d.get("narr");
       Map<String, Float> boost = createBoostMap();
@@ -119,20 +118,17 @@ public class SearchIndex {
       String[] arr = n.split("\\. ");
 
       BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
-      booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.MUST);
-
-      // FuzzyQuery.Builder fuzzQuery = new FuzzyQuery.Builder();
-      // fuzzQuery.add(qp.parse(QueryParser.escape(q.trim())), 10)
+      booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.SHOULD);
 
       for(int i =0; i< arr.length; i++){
         String s = arr[i];
         s = (s.toLowerCase()).replace("documents", "");
         if(s.contains("not relevant")){
             s = s.replace("not relevant", "");
-            booleanQuery.add(qp.parse(QueryParser.escape(s.trim())), BooleanClause.Occur.MUST_NOT);
+            //booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), -0.1f), BooleanClause.Occur.MUST_NOT);
         }else{
             s = s.replace("relevant", "");
-            booleanQuery.add(qp.parse(QueryParser.escape(s.trim())), BooleanClause.Occur.SHOULD);
+            //booleanQuery.add(qp.parse(QueryParser.escape(s.trim())), BooleanClause.Occur.SHOULD);
         }
       }
       return booleanQuery.build();
