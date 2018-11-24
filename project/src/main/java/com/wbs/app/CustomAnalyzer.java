@@ -39,7 +39,8 @@ public class CustomAnalyzer extends StopwordAnalyzerBase{
             tok = new TrimFilter(tok);
 //            tok = new SynonymGraphFilter(tok, buildMap(), true);
 //            tok = new FlattenGraphFilter(tok);
-            tok = new SynonymAwareStopFilter(tok, getStopWords());
+//            tok = new SynonymAwareStopFilter(tok, getStopWords());
+            tok = new StopFilter(tok, getStopWords());
             tok = new SnowballFilter(tok, new EnglishStemmer());
             //        tok = new PorterStemFilter(tok);
         } catch (Exception e) {

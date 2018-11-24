@@ -3,6 +3,7 @@ package com.wbs.app;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.io.*;
+import java.text.ParseException;
 import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.ArrayList;
@@ -13,6 +14,9 @@ import java.util.Iterator;
 import java.util.HashMap;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.synonym.SynonymMap;
+import org.apache.lucene.analysis.synonym.WordnetSynonymParser;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -24,7 +28,8 @@ public class CreateIndex {
 	// Directory where the search index will be saved
 	private static String INDEX_DIRECTORY = "../index";
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ParseException {
+
 		Analyzer analyzer = new CustomAnalyzer();
 
 		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
