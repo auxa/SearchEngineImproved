@@ -42,7 +42,7 @@ public class CustomAnalyzer extends StopwordAnalyzerBase{
 //            tok = new SynonymAwareStopFilter(tok, getStopWords());
             tok = new StopFilter(tok, getStopWords());
             tok = new SnowballFilter(tok, new EnglishStemmer());
-            //        tok = new PorterStemFilter(tok);
+//            tok = new PorterStemFilter(tok);
         } catch (Exception e) {
             e.printStackTrace();
         }

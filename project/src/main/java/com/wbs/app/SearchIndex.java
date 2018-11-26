@@ -114,24 +114,26 @@ public class SearchIndex {
 //      String q = d.get("title") + " " + d.get("desc");
       String n = d.get("narr");
       Map<String, Float> boost = createBoostMap();
-      q = q.replace("Description:", "");
+      des = des.replace("Description:", "");
       n = n.replace("Narrative:", "");
       MultiFieldQueryParser qp = new MultiFieldQueryParser(new String[] {"filename", "text"}, analyzer, boost);
       String[] arr = n.split("\\. ");
 
       BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
-      booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(q.trim())), 3.0f), BooleanClause.Occur.SHOULD);
-      booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(des.trim())), 1.0f), BooleanClause.Occur.SHOULD);
+      booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(q.trim())), 3.5f), BooleanClause.Occur.SHOULD);
+      booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(des.trim())), 0.9f), BooleanClause.Occur.SHOULD);
 
-      for(int i =0; i< arr.length; i++){
+
+        for(int i =0; i< arr.length; i++){
         String s = arr[i];
         s = (s.toLowerCase()).replace("documents", "");
         if(s.contains("not relevant")){
             s = s.replace("not relevant", "");
-            //booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), -0.1f), BooleanClause.Occur.MUST_NOT);
+//            booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), 0.9f), BooleanClause.Occur.MUST_NOT);
+
         }else{
             s = s.replace("relevant", "");
-            //booleanQuery.add(qp.parse(QueryParser.escape(s.trim())), BooleanClause.Occur.SHOULD);
+            booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), 0.2f), BooleanClause.Occur.SHOULD);
         }
       }
       return booleanQuery.build();
