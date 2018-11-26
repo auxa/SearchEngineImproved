@@ -109,7 +109,9 @@ public class SearchIndex {
       return null;
     }
     private static Query getQuery(Document d) throws Exception {
-      String q = d.get("title") + " " + d.get("desc");
+              String q = d.get("title");
+              String des = d.get("desc");
+//      String q = d.get("title") + " " + d.get("desc");
       String n = d.get("narr");
       Map<String, Float> boost = createBoostMap();
       q = q.replace("Description:", "");
@@ -118,7 +120,8 @@ public class SearchIndex {
       String[] arr = n.split("\\. ");
 
       BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
-      booleanQuery.add(qp.parse(QueryParser.escape(q.trim())), BooleanClause.Occur.SHOULD);
+      booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(q.trim())), 3.0f), BooleanClause.Occur.SHOULD);
+      booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(des.trim())), 1.0f), BooleanClause.Occur.SHOULD);
 
       for(int i =0; i< arr.length; i++){
         String s = arr[i];
