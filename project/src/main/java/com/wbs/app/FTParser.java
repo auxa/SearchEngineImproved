@@ -16,7 +16,7 @@ import org.jsoup.select.Elements;
 
 public class FTParser {
 
-	public String FT_FOLDER = "../project/AssignmentTwo/ft";
+	public String FT_FOLDER = "../AssignmentTwo/ft";
 
 	public FTParser() {}
 
@@ -41,9 +41,17 @@ public class FTParser {
 						for (Element docI: documents){
 							String docNum= docI.getElementsByTag("DOCNO").text();
 							Elements text= docI.getElementsByTag("TEXT");
+							Elements pageNo = docI.getElementsByTag("PAGE");
 							Elements dateElement = docI.getElementsByTag("DATE");
 							String title= docI.getElementsByTag("HEADLINE").text();
+							Elements byLine = docI.getElementsByTag("BYLINE");
 							String textField= text.text();
+							if(pageNo.hasText()){
+								textField += " " + pageNo.text();
+							}
+							if(byLine.hasText()){
+								textField += " " + byLine.text();
+							}
 							Document customDoc = new Document();
 							customDoc.add(new TextField("id", docNum, Field.Store.YES));
 							customDoc.add(new TextField("filename", title, Field.Store.YES));

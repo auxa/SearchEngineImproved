@@ -37,9 +37,9 @@ public class LAParser {
   					Elements title= docI.getElementsByTag("HEADLINE");
 
     				Elements text= docI.getElementsByTag("TEXT");
-						Elements text1= docI.getElementsByTag("GRAPHIC");
+					Elements text1= docI.getElementsByTag("GRAPHIC");
 
-						String final_text = text.text() + text1.text();
+					String final_text = text.text() + text1.text();
 
     				Document customDoc = new Document();
     				customDoc.add(new TextField("id", docNum, Field.Store.YES));
