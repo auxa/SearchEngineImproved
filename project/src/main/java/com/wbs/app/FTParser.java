@@ -16,7 +16,7 @@ import org.jsoup.select.Elements;
 
 public class FTParser {
 
-	public String FT_FOLDER = "../AssignmentTwo/ft";
+	public String FT_FOLDER = "../project/AssignmentTwo/ft";
 
 	public FTParser() {}
 
@@ -69,7 +69,7 @@ public class FTParser {
 		}
 		return docList;
 	}
-	
+
 	private String convertDate(String date) throws ParseException {
 	    DateFormat parser = new SimpleDateFormat("yymmdd");
 	    Date formattedDate = parser.parse(date);
@@ -78,5 +78,3 @@ public class FTParser {
 	    return formatter.format(formattedDate);
 	}
 }
-
-

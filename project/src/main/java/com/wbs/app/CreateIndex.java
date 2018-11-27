@@ -57,9 +57,10 @@ public class CreateIndex {
 			FbisParser fbParser = new FbisParser();
 
 			ArrayList<Document> myDocs = new ArrayList<Document>();
-			//myDocs.addAll(frParser.parseFile());
+			myDocs.addAll(frParser.parseFile());
 			myDocs.addAll(ftParser.parseFile());
-			//myDocs.addAll(fbParser.parseFile());
+			myDocs.addAll(fbParser.parseFile());
+			myDocs.addAll(laParser.parseFile());
 			// TreeMap zipfDist = zipfCalculator(myDocs);
 			// printMap(zipfDist);
 

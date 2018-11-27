@@ -72,7 +72,7 @@ public class SearchIndex {
       private static Map<String, Float> createBoostMap(){
         Map<String, Float> boost = new HashMap<>();
         boost.put("filename", (float) 0.1);
-        boost.put("text",(float) 0.90);
+        boost.put("text",(float) 0.9);
         return boost;
       }
 
@@ -109,9 +109,8 @@ public class SearchIndex {
       return null;
     }
     private static Query getQuery(Document d) throws Exception {
-              String q = d.get("title");
-              String des = d.get("desc");
-//      String q = d.get("title") + " " + d.get("desc");
+      String q = d.get("title");
+      String des = d.get("desc");
       String n = d.get("narr");
       Map<String, Float> boost = createBoostMap();
       des = des.replace("Description:", "");
@@ -129,7 +128,7 @@ public class SearchIndex {
         s = (s.toLowerCase()).replace("documents", "");
         if(s.contains("not relevant")){
             s = s.replace("not relevant", "");
-//            booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), 0.9f), BooleanClause.Occur.MUST_NOT);
+            //booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), 0.01f), BooleanClause.Occur.MUST_NOT);
 
         }else{
             s = s.replace("relevant", "");
