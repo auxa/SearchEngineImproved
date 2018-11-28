@@ -22,6 +22,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.search.similarities.*;
 
 public class CreateIndex {
 
@@ -37,6 +38,7 @@ public class CreateIndex {
 		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
 
 		indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+		indexWriterConfig.setSimilarity(new BM25Similarity(0.8f, 0.75f));
 
 		IndexWriter iwriter = new IndexWriter(directory, indexWriterConfig);
 

@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.charset.Charset;
+import java.util.*;
+
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -45,7 +49,7 @@ public class SearchIndex {
             Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
             IndexReader ireader = DirectoryReader.open(directory);
             IndexSearcher isearcher = new IndexSearcher(ireader);
-
+            isearcher.setSimilarity(new BM25Similarity(0.8f, 0.75f));
             analyzer = new CustomAnalyzer();
 
             ArrayList<Document> loadedQueries = loadQueriesFromFile();
@@ -119,6 +123,7 @@ public class SearchIndex {
         n = n.replace("i.e.", "");
         n = n.replace("e.g.", "");
         n = n.replace("U.S.", "United States");
+        des = des.replace("United States", "U.S. United States");
 
 
         Map<String, Float> boost = createBoostMap();
@@ -128,29 +133,28 @@ public class SearchIndex {
         String[] arr = n.split("\\. ");
 
         BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
-
+        des = SearchIndex.remove_stops(des);
         System.out.println(des);
+
 
         for(int i =0; i< arr.length; i++){
             String s = arr[i];
             s = (s.toLowerCase()).replace("documents", "");
             if((s.contains("not relevant") || s.contains("irrelevant")) && !s.contains("unless") ){
+              s = SearchIndex.remove_stops(s);
                 s = s.replace("not relevant", "");
                 booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), -0.08f), BooleanClause.Occur.SHOULD);
 
             }else{
                 s = s.replace("relevant", "");
+                s = SearchIndex.remove_stops(s);
+
                 booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), 0.98f), BooleanClause.Occur.SHOULD);
             }
         }
         for(String top : tops){
             top = top.trim();
-            if(Character.isUpperCase(top.charAt(0))){
-                System.out.println(top);
-                booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(top)), 3.5f), BooleanClause.Occur.SHOULD);
-            }else{
-                booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(top)), 3.5f), BooleanClause.Occur.SHOULD);
-            }
+            booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(top)), 3.5f), BooleanClause.Occur.SHOULD);
 
         }
         booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(des.trim())), 1.65f), BooleanClause.Occur.SHOULD);
@@ -159,4 +163,29 @@ public class SearchIndex {
     private static Query wrapWithBoost(Query query, float boost) {
         return new BoostQuery(query, boost);
     }
+
+    static String remove_stops(String s){
+        s = SearchIndex.remove_stops_words(s);
+
+       return s;
+
+    }
+    static String remove_stops_words(String s) {
+        List<String> myStopWords = new ArrayList<String>();
+      try{
+        myStopWords =  Files.readAllLines(new File("../project/stopwords.txt").toPath(), Charset.forName("utf-8"));
+      }
+      catch (FileNotFoundException e){
+        System.out.println("stopwords path wrong");
+      }catch (IOException e){
+        return s;
+
+      }
+
+       for(String word : myStopWords) {
+           s = s.replace(" " + word + " ", " ");
+       }
+       s = s.trim();
+       return s;
+   }
 }
