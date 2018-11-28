@@ -38,7 +38,7 @@ public class SearchIndex {
           private static Analyzer analyzer;
           private static String INDEX_DIRECTORY = "../index";
 
-          private static int MAX_RESULTS = 1000; //subject to change
+          private static int MAX_RESULTS = 10000; //subject to change
 
           public static void main(String[] args) throws Exception {
 
@@ -116,11 +116,15 @@ public class SearchIndex {
       des = des.replace("Description:", "");
       n = n.replace("Narrative:", "");
       MultiFieldQueryParser qp = new MultiFieldQueryParser(new String[] {"filename", "text"}, analyzer, boost);
+      PhraseQuery.Builder phrasequery = new PhraseQuery.Builder();
       String[] arr = n.split("\\. ");
 
       BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
       booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(q.trim())), 3.5f), BooleanClause.Occur.SHOULD);
       booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(des.trim())), 0.9f), BooleanClause.Occur.SHOULD);
+      phrasequery.add(new Term("text"));
+      PhraseQuery phraseQuery = phrasequery.build();
+      booleanQuery.add(phraseQuery, BooleanClause.Occur.SHOULD);
 
 
         for(int i =0; i< arr.length; i++){
