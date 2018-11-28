@@ -25,6 +25,7 @@ import org.apache.lucene.analysis.standard.ClassicTokenizer;
 import org.apache.lucene.analysis.synonym.SynonymGraphFilter;
 import org.apache.lucene.analysis.synonym.SynonymMap;
 import org.apache.lucene.analysis.synonym.WordnetSynonymParser;
+import org.apache.lucene.util.CharsRef;
 import org.tartarus.snowball.ext.EnglishStemmer;
 
 
@@ -37,8 +38,8 @@ public class CustomAnalyzer extends StopwordAnalyzerBase{
 
         try {
             tok = new TrimFilter(tok);
-//            tok = new SynonymGraphFilter(tok, buildMap(), true);
-            // tok = new FlattenGraphFilter(tok);
+            tok = new SynonymGraphFilter(tok, buildMap(), true);
+             tok = new FlattenGraphFilter(tok);
             //tok = new SynonymAwareStopFilter(tok, getStopWords());
             tok = new StopFilter(tok, getStopWords());
             tok = new SnowballFilter(tok, new EnglishStemmer());
@@ -64,11 +65,18 @@ public class CustomAnalyzer extends StopwordAnalyzerBase{
 		return  new CharArraySet(stopWordsSet, true);
 	}
 
-	protected SynonymMap buildMap() throws IOException, ParseException {
-        FileReader reader = new FileReader("../project/wn_s.pl");
-        WordnetSynonymParser synonymParser = new WordnetSynonymParser(true, true, new StandardAnalyzer(CharArraySet.EMPTY_SET));
-        synonymParser.parse(reader);
-        SynonymMap synonymMap = synonymParser.build();
+    protected SynonymMap buildMap() throws IOException, ParseException {
+        FileInputStream fileInputStream = new FileInputStream("synonyms.txt");
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+        String line = null;
+        SynonymMap.Builder builder = new SynonymMap.Builder(true);
+
+        while ((line = bufferedReader.readLine()) != null)
+        {
+            builder.add(new CharsRef(line), new CharsRef("country"), true);
+            builder.add(new CharsRef(line), new CharsRef("countries"), true);
+        }
+        SynonymMap synonymMap = builder.build();
         return synonymMap;
     }
 }

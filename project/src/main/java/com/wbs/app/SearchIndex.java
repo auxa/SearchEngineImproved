@@ -50,7 +50,7 @@ public class SearchIndex {
             IndexReader ireader = DirectoryReader.open(directory);
             IndexSearcher isearcher = new IndexSearcher(ireader);
             isearcher.setSimilarity(new BM25Similarity(0.8f, 0.75f));
-            analyzer = new CustomAnalyzer();
+            analyzer = new QueryAnalyzer();
 
             ArrayList<Document> loadedQueries = loadQueriesFromFile();
             ArrayList<String> qrels = new ArrayList<String>();

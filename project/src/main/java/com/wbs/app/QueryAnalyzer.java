@@ -10,6 +10,7 @@ import org.apache.lucene.analysis.synonym.SynonymGraphFilter;
 import org.apache.lucene.analysis.synonym.SynonymMap;
 import org.apache.lucene.analysis.synonym.WordnetSynonymParser;
 import org.apache.lucene.search.TokenStreamToTermAutomatonQuery;
+import org.apache.lucene.util.CharsRef;
 import org.tartarus.snowball.ext.EnglishStemmer;
 
 import java.io.*;
@@ -52,11 +53,25 @@ public class QueryAnalyzer extends StopwordAnalyzerBase {
         return  new CharArraySet(stopWordsSet, true);
     }
 
+//    protected SynonymMap buildMap() throws IOException, ParseException {
+//        FileReader reader = new FileReader("../project/wn_s.pl");
+//        WordnetSynonymParser synonymParser = new WordnetSynonymParser(true, true, new StandardAnalyzer(CharArraySet.EMPTY_SET));
+//        synonymParser.parse(reader);
+//        SynonymMap synonymMap = synonymParser.build();
+//        return synonymMap;
+//    }
     protected SynonymMap buildMap() throws IOException, ParseException {
-        FileReader reader = new FileReader("../project/wn_s.pl");
-        WordnetSynonymParser synonymParser = new WordnetSynonymParser(true, true, new StandardAnalyzer(CharArraySet.EMPTY_SET));
-        synonymParser.parse(reader);
-        SynonymMap synonymMap = synonymParser.build();
+        FileInputStream fileInputStream = new FileInputStream("synonyms.txt");
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+        String line = null;
+        SynonymMap.Builder builder = new SynonymMap.Builder(true);
+
+        while ((line = bufferedReader.readLine()) != null)
+        {
+            builder.add(new CharsRef(line), new CharsRef("country"), true);
+            builder.add(new CharsRef(line), new CharsRef("countries"), true);
+        }
+        SynonymMap synonymMap = builder.build();
         return synonymMap;
     }
 }
