@@ -52,22 +52,34 @@ public class CreateIndex {
 
 
 			FrParser frParser = new FrParser();
-			LAParser laParser = new LAParser();
-			FTParser ftParser = new FTParser();
-			FbisParser fbParser = new FbisParser();
-
-			ArrayList<Document> myDocs = new ArrayList<Document>();
-			myDocs.addAll(frParser.parseFile());
-			myDocs.addAll(ftParser.parseFile());
-			myDocs.addAll(fbParser.parseFile());
-			myDocs.addAll(laParser.parseFile());
-			// TreeMap zipfDist = zipfCalculator(myDocs);
-			// printMap(zipfDist);
-
+			ArrayList<Document> myDocs = frParser.parseFile();
 			for(Document doc : myDocs){
 				iw.addDocument(doc);
 				System.out.println("Building index "+ doc.get("id"));
 			}
+
+			LAParser laParser = new LAParser();
+			myDocs = laParser.parseFile();
+			for(Document doc : myDocs){
+				iw.addDocument(doc);
+				System.out.println("Building index "+ doc.get("id"));
+			}
+
+			FTParser ftParser = new FTParser();
+			myDocs = ftParser.parseFile();
+			for(Document doc : myDocs){
+				iw.addDocument(doc);
+				System.out.println("Building index "+ doc.get("id"));
+			}
+
+			FbisParser fbParser = new FbisParser();
+			myDocs = fbParser.parseFile();
+			for(Document doc : myDocs){
+				iw.addDocument(doc);
+				System.out.println("Building index "+ doc.get("id"));
+			}
+
+
 		}
 		catch(Exception ex) {
 			System.out.println( "Unable to open file '" + ex + "'");
