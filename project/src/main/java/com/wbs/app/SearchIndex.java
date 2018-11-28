@@ -109,39 +109,54 @@ public class SearchIndex {
       return null;
     }
     private static Query getQuery(Document d) throws Exception {
-      String q = d.get("title");
-      String des = d.get("desc");
-      String n = d.get("narr");
-      Map<String, Float> boost = createBoostMap();
-      des = des.replace("Description:", "");
-      n = n.replace("Narrative:", "");
-      MultiFieldQueryParser qp = new MultiFieldQueryParser(new String[] {"filename", "text"}, analyzer, boost);
-      PhraseQuery.Builder phrasequery = new PhraseQuery.Builder();
-      String[] arr = n.split("\\. ");
+        String q = d.get("title");
+        String[] tops = q.split(",");
+        String des = d.get("desc");
+        String[] var = des.split("Narrative:");
+        des = var[0];
+        String n = d.get("narr");
+        n = n.replace("etc.", "");
+        n = n.replace("i.e.", "");
+        n = n.replace("e.g.", "");
+        n = n.replace("U.S.", "United States");
 
-      BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
-      booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(q.trim())), 3.5f), BooleanClause.Occur.SHOULD);
-      booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(des.trim())), 0.9f), BooleanClause.Occur.SHOULD);
-      phrasequery.add(new Term("text"));
-      PhraseQuery phraseQuery = phrasequery.build();
-      booleanQuery.add(phraseQuery, BooleanClause.Occur.SHOULD);
 
+        Map<String, Float> boost = createBoostMap();
+        des = des.replace("Description:", "");
+        n = n.replace("Narrative:", "");
+        MultiFieldQueryParser qp = new MultiFieldQueryParser(new String[] {"filename", "text"}, analyzer, boost);
+        String[] arr = n.split("\\. ");
+
+        BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
+
+        System.out.println(des);
 
         for(int i =0; i< arr.length; i++){
-        String s = arr[i];
-        s = (s.toLowerCase()).replace("documents", "");
-        if(s.contains("not relevant")){
-            s = s.replace("not relevant", "");
-            //booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), 0.01f), BooleanClause.Occur.MUST_NOT);
+            String s = arr[i];
+            s = (s.toLowerCase()).replace("documents", "");
+            if((s.contains("not relevant") || s.contains("irrelevant")) && !s.contains("unless") ){
+                s = s.replace("not relevant", "");
+                booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), -0.08f), BooleanClause.Occur.SHOULD);
 
-        }else{
-            s = s.replace("relevant", "");
-            booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), 0.2f), BooleanClause.Occur.SHOULD);
+            }else{
+                s = s.replace("relevant", "");
+                booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(s.trim())), 0.98f), BooleanClause.Occur.SHOULD);
+            }
         }
-      }
-      return booleanQuery.build();
+        for(String top : tops){
+            top = top.trim();
+            if(Character.isUpperCase(top.charAt(0))){
+                System.out.println(top);
+                booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(top)), 3.5f), BooleanClause.Occur.SHOULD);
+            }else{
+                booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(top)), 3.5f), BooleanClause.Occur.SHOULD);
+            }
+
+        }
+        booleanQuery.add(wrapWithBoost(qp.parse(QueryParser.escape(des.trim())), 1.65f), BooleanClause.Occur.SHOULD);
+        return booleanQuery.build();
     }
     private static Query wrapWithBoost(Query query, float boost) {
         return new BoostQuery(query, boost);
-  }
+    }
 }
