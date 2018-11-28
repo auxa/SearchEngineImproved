@@ -38,7 +38,7 @@ public class SearchIndex {
           private static Analyzer analyzer;
           private static String INDEX_DIRECTORY = "../index";
 
-          private static int MAX_RESULTS = 10000; //subject to change
+          private static int MAX_RESULTS = 1000; //subject to change
 
           public static void main(String[] args) throws Exception {
 
